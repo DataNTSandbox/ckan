@@ -353,7 +353,7 @@ def default_related_schema():
         'title': [not_empty, unicode],
         'description': [ignore_missing, unicode],
         'type': [not_empty, unicode],
-        'image_url': [ignore_missing, unicode, url_validator],
+        'image_url': [ignore_missing, unicode],
         'url': [ignore_missing, unicode, url_validator],
         'owner_id': [not_empty, unicode],
         'created': [ignore],

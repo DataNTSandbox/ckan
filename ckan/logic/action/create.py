@@ -3,7 +3,7 @@
 import logging
 import random
 import re
-
+import json
 from pylons import config
 import paste.deploy.converters
 from sqlalchemy import func
@@ -156,7 +156,7 @@ def package_create(context, data_dict):
             try:
                 check_data_dict(data_dict, schema)
             except TypeError:
-                # Old plugins do not support passing the schema so we need
+                # Old plugins do not support ssing the schema so we need
                 # to ensure they still work
                 package_plugin.check_data_dict(data_dict)
 
@@ -305,7 +305,11 @@ def resource_create(context, data_dict):
         _get_action('package_update')(context, pkg_dict)
         context.pop('defer_commit')
     except ValidationError, e:
-        errors = e.error_dict['resources'][-1]
+        if 'resources' in e.error_dict:
+            errors = e.error_dict['resources'][-1]
+        else:
+            errors = ["Please ensure the metadata details of the dataset are completed and saved before trying to add files/resources " + str(e.error_dict)]
+
         raise ValidationError(errors)
 
     ## Get out resource_id resource from model as it will not appear in
@@ -500,6 +504,9 @@ def related_create(context, data_dict):
     userobj = model.User.get(user)
 
     _check_access('related_create', context, data_dict)
+    upload = uploader.Upload('related')
+    upload.update_data_dict(data_dict, 'image_url',
+                            'image_upload', 'clear_upload')
 
     data_dict["owner_id"] = userobj.id
     data, errors = _validate(
@@ -507,7 +514,7 @@ def related_create(context, data_dict):
     if errors:
         model.Session.rollback()
         raise ValidationError(errors)
-
+    upload.upload(uploader.get_max_image_size())
     related = model_save.related_dict_save(data, context)
     if not context.get('defer_commit'):
         model.repo.commit_and_remove()
@@ -1115,6 +1122,7 @@ def _get_random_username_from_email(email):
 def package_create_rest(context, data_dict):
     _check_access('package_create_rest', context, data_dict)
     dictized_package = model_save.package_api_to_dict(data_dict, context)
+    log.info(json.dumps(dictized_package))
     dictized_after = _get_action('package_create')(context, dictized_package)
     pkg = context['package']
     package_dict = model_dictize.package_to_api(pkg, context)

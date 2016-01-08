@@ -351,8 +351,8 @@ def update_config():
         extras = {'client_encoding': 'utf8'}
     else:
         extras = {}
-
-    engine = sqlalchemy.engine_from_config(config, 'sqlalchemy.', **extras)
+    from sqlalchemy.pool import NullPool
+    engine = sqlalchemy.engine_from_config(config, 'sqlalchemy.', client_encoding='utf8', poolclass=NullPool)
 
     if not model.meta.engine:
         model.init_model(engine)

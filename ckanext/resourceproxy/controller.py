@@ -47,7 +47,7 @@ def proxy_resource(context, data_dict):
 
         cl = r.headers.get('content-length')
         if cl and int(cl) > MAX_FILE_SIZE:
-            base.abort(409, '''Content is too large to be proxied. Allowed
+            base.abort(409, '''Sorry about that, but we cannot show files that are this big right now. Allowed
                 file size: {allowed}, Content-Length: {actual}.'''.format(
                 allowed=MAX_FILE_SIZE, actual=cl))
 
@@ -64,7 +64,7 @@ def proxy_resource(context, data_dict):
 
             if length >= MAX_FILE_SIZE:
                 base.abort(409, headers={'content-encoding': ''},
-                           detail='Content is too large to be proxied.')
+                           detail='Sorry about that, but we cannot show files that are this big right now. Please download instead.')
 
     except requests.exceptions.HTTPError, error:
         details = 'Could not proxy resource. Server responded with %s %s' % (

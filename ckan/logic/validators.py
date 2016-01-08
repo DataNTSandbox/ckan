@@ -601,8 +601,8 @@ def user_password_validator(key, data, errors, context):
         errors[('password',)].append(_('Passwords must be strings'))
     elif value == '':
         pass
-    elif len(value) < 4:
-        errors[('password',)].append(_('Your password must be 4 characters or longer'))
+    elif len(value) < 12:
+        errors[('password',)].append(_('Your password must be 12 characters or longer'))
 
 def user_passwords_match(key, data, errors, context):
 
@@ -832,10 +832,9 @@ def filter_fields_and_values_exist_and_are_valid(key, data, errors, context):
 
 
 def extra_key_not_in_root_schema(key, data, errors, context):
-
     for schema_key in context.get('schema_keys', []):
         if schema_key == data[key]:
-            raise Invalid(_('There is a schema field with the same name'))
+            raise Invalid(_('There is a schema field with the same name '+schema_key))
 
 
 def empty_if_not_sysadmin(key, data, errors, context):

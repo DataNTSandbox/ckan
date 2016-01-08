@@ -59,7 +59,6 @@ def group_list_dictize(obj_list, context,
     return sorted(group_list, key=sort_key, reverse=reverse)
 
 def resource_list_dictize(res_list, context):
-
     active = context.get('active', True)
     result_list = []
     for res in res_list:
@@ -129,7 +128,18 @@ def resource_dictize(res, context):
     return resource
 
 def related_dictize(rel, context):
-    return d.table_dictize(rel, context)
+    related = d.table_dictize(rel, context)
+    image_url = related.get('image_url')
+    related['image_display_url'] = image_url
+    if image_url and not image_url.startswith('http'):
+        #munge here should not have an effect only doing it incase
+        #of potential vulnerability of dodgy api input
+        image_url = munge.munge_filename(image_url)
+        related['image_display_url'] = h.url_for_static(
+            'uploads/related/%s' % related.get('image_url'),
+            qualified=True
+        )
+    return related
 
 
 def _execute(q, table, context):
@@ -409,7 +419,7 @@ def group_dictize(group, context,
                 try:
                     packages_limit = context['limits']['packages']
                 except KeyError:
-                    q['rows'] = 1000  # Only the first 1000 datasets are returned
+                    q['rows'] = 10  # Only the first 10 datasets are returned
                 else:
                     q['rows'] = packages_limit
 

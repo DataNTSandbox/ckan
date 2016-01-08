@@ -45,7 +45,7 @@
   ["DOCX", "Word OOXML Document", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", []],
   ["BIN", "Binary Data", "application/octet-stream", ["bin"]],
   ["XSLT", "Extensible Stylesheet Language Transformations", "application/xslt+xml", []],
-  ["WMS", "Web Mapping Service", "WMS", ["wms"]],
+  ["wms", "Web Mapping Service", "wms", ["WMS"]],
   ["SVG", "SVG vector image", "image/svg+xml", ["svg"]],
   ["PPT", "Powerpoint Presentation", "application/vnd.ms-powerpoint", []],
   ["JPEG", "JPG Image File", "image/jpeg", ["jpeg", "jpg"]],

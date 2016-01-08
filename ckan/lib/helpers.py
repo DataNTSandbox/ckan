@@ -894,7 +894,7 @@ class Page(paginate.Page):
     def pager(self, *args, **kwargs):
         kwargs.update(
             format=u"<div class='pagination pagination-centered'><ul>$link_previous ~2~ $link_next</ul></div>",
-            symbol_previous=u'«', symbol_next=u'»',
+            symbol_previous=u'Previous Page', symbol_next=u'Next Page',
             curpage_attr={'class': 'active'}, link_attr={}
         )
         return super(Page, self).pager(*args, **kwargs)
@@ -914,8 +914,8 @@ class Page(paginate.Page):
         html = super(Page, self)._range(regexp_match)
         # Convert ..
         dotdot = '<span class="pager_dotdot">..</span>'
-        dotdot_link = HTML.li(HTML.a('...', href='#'), class_='disabled')
-        html = re.sub(dotdot, dotdot_link, html)
+
+        html = re.sub(dotdot, '', html)
 
         # Convert current page
         text = '%s' % self.page
@@ -1992,7 +1992,7 @@ def get_organization(org=None, include_datasets=False):
         return {}
     try:
         return logic.get_action('organization_show')({}, {'id': org, 'include_datasets': include_datasets})
-    except (NotFound, ValidationError, NotAuthorized):
+    except (logic.NotFound, logic.ValidationError, logic.NotAuthorized):
         return {}
 
 

@@ -15,17 +15,3 @@
  *
  * Returns .
  */
-this.ckan.module('select-switch', {
-
-  options: {
-    target: 'select'
-  },
-
-  initialize: function () {
-    var _this = this;
-
-    this.el.on('change', this.options.target, function () {
-      _this.el.submit();
-    });
-  }
-});

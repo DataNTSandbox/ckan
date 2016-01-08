@@ -114,6 +114,12 @@ def munge_tag(tag):
 def munge_filename(filename):
     filename = substitute_ascii_equivalents(filename)
     filename = filename.strip()
+    try:
+        import ntpath
+        #Internet Explorer provides full paths, not filenames so strip path
+        filename = ntpath.basename(filename)
+    except ImportError:
+        filename = filename
     filename = re.sub(r'[^a-zA-Z0-9.\- ]', '', filename).replace(' ', '-')
     filename = _munge_to_length(filename, 3, 100)
     return filename

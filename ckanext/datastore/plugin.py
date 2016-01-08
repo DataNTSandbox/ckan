@@ -384,7 +384,7 @@ class DatastorePlugin(p.SingletonPlugin):
         where = self._where(data_dict, fields_types)
 
         select_cols = [u'"{0}"'.format(field_id) for field_id in field_ids] +\
-                      [u'count(*) over() as "_full_count" %s' % rank_column]
+                      [u'c.reltuples AS "_full_count" %s' % rank_column]
 
         query_dict['distinct'] = data_dict.get('distinct', False)
         query_dict['select'] += select_cols

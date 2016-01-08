@@ -960,8 +960,9 @@ def package_show(context, data_dict):
     # If the package_dict came from the Solr cache then each resource dict will
     # already have a potentially outdated tracking_summary, this will overwrite
     # it with a current one.
-    for resource_dict in package_dict['resources']:
-        _add_tracking_summary_to_resource_dict(resource_dict, model)
+    if len(package_dict['resources']) < 10:
+        for resource_dict in package_dict['resources']:
+            _add_tracking_summary_to_resource_dict(resource_dict, model)
 
     if context.get('for_view'):
         for item in plugins.PluginImplementations(plugins.IPackageController):
@@ -1029,7 +1030,7 @@ def resource_show(context, data_dict):
         if resource_dict['id'] == id:
             break
     else:
-        log.error('Could not find resource ' + id)
+        log.info('Could not find resource ' + id)
         raise NotFound(_('Resource was not found.'))
 
     return resource_dict

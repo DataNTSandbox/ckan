@@ -48,17 +48,6 @@ def related_create(context, data_dict=None):
 
     To create a featured item the user must be a sysadmin.
     '''
-    model = context['model']
-    user = context['user']
-    userobj = model.User.get( user )
-
-    if userobj:
-        if data_dict.get('featured', 0) != 0:
-            return {'success': False,
-                    'msg': _('You must be a sysadmin to create a featured '
-                             'related item')}
-        return {'success': True}
-
     return {'success': False, 'msg': _('You must be logged in to add a related item')}
 
 

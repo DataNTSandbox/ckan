@@ -59,7 +59,9 @@ def related_update(context, data_dict):
 
     related = model.Related.get(id)
     context["related"] = related
-
+    upload = uploader.Upload('related', related.image_url)
+    upload.update_data_dict(data_dict, 'image_url',
+                            'image_upload', 'clear_upload')
     if not related:
         log.error('Could not find related ' + id)
         raise NotFound(_('Item was not found.'))
@@ -96,7 +98,7 @@ def related_update(context, data_dict):
     }
 
     _get_action('activity_create')(activity_create_context, activity_dict)
-
+    upload.upload(uploader.get_max_image_size())
     if not context.get('defer_commit'):
         model.repo.commit()
     return model_dictize.related_dictize(related, context)
@@ -155,7 +157,10 @@ def resource_update(context, data_dict):
         updated_pkg_dict = _get_action('package_update')(context, pkg_dict)
         context.pop('defer_commit')
     except ValidationError, e:
-        errors = e.error_dict['resources'][n]
+        if 'resources' in e.error_dict:
+            errors = e.error_dict['resources'][-1]
+        else:
+            errors = ["Please ensure the metadata details of the dataset are completed and saved before trying to add files/resources " + json.dumps(e.error_dict)]
         raise ValidationError(errors)
 
     upload.upload(id, uploader.get_max_resource_size())

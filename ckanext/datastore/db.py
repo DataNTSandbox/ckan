@@ -967,7 +967,8 @@ def search_data(context, data_dict):
         sort_clause = ''
 
     sql_string = u'''SELECT {distinct} {select}
-                    FROM "{resource}" {ts_query}
+                    FROM "{resource}" ,(SELECT reltuples FROM pg_class
+WHERE relname = '{resource}') as c {ts_query}
                     {where} {sort} LIMIT {limit} OFFSET {offset}'''.format(
         distinct=distinct,
         select=select_columns,
