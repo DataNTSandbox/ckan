@@ -138,7 +138,7 @@ class UserController(base.BaseController):
                           id=None)
         user_ref = c.userobj.get_reference_preferred_for_uri()
         h.redirect_to(locale=locale, controller='user', action='dashboard',
-                      id=user_ref)
+                      id=user_ref, protocol='https')
 
     def register(self, data=None, errors=None, error_summary=None):
         context = {'model': model, 'session': model.Session, 'user': c.user,

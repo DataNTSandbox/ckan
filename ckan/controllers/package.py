@@ -695,7 +695,7 @@ class PackageController(base.BaseController):
                     if g.legacy_templates:
                         h.flash_error(msg)
                         redirect(h.url_for(controller='package',
-                                           action='new_resource', id=id))
+                                           action='new_resource', id=id, protocol='https'))
                     else:
                         errors = {}
                         error_summary = {_('Error'): msg}
@@ -706,7 +706,7 @@ class PackageController(base.BaseController):
                     dict(context, allow_state_change=True),
                     dict(data_dict, state='active'))
                 redirect(h.url_for(controller='package',
-                                   action='read', id=id))
+                                   action='read', id=id, protocol='https'))
 
             data['package_id'] = id
             try:
@@ -731,19 +731,19 @@ class PackageController(base.BaseController):
                     dict(context, allow_state_change=True),
                     dict(data_dict, state='active'))
                 redirect(h.url_for(controller='package',
-                                   action='read', id=id))
+                                   action='read', id=id, protocol='https'))
             elif save_action == 'go-dataset':
                 # go to first stage of add dataset
                 redirect(h.url_for(controller='package',
-                                   action='edit', id=id))
+                                   action='edit', id=id, protocol='https'))
             elif save_action == 'go-dataset-complete':
                 # go to first stage of add dataset
                 redirect(h.url_for(controller='package',
-                                   action='read', id=id))
+                                   action='read', id=id, protocol='https'))
             else:
                 # add more resources
                 redirect(h.url_for(controller='package',
-                                   action='new_resource', id=id))
+                                   action='new_resource', id=id, protocol='https'))
 
         # get resources for sidebar
         context = {'model': model, 'session': model.Session,
@@ -943,12 +943,12 @@ class PackageController(base.BaseController):
                         # redirect to add metadata
                         url = h.url_for(controller='package',
                                         action='new_metadata',
-                                        id=pkg_dict['name'])
+                                        id=pkg_dict['name'], protocol='https')
                     else:
                         # redirect to add dataset resources
                         url = h.url_for(controller='package',
                                         action='new_resource',
-                                        id=pkg_dict['name'])
+                                        id=pkg_dict['name'], protocol='https')
                     redirect(url)
                 # Make sure we don't index this dataset
                 if request.params['save'] not in ['go-resource', 'go-metadata']:
@@ -964,7 +964,7 @@ class PackageController(base.BaseController):
                 # redirect to add dataset resources
                 url = h.url_for(controller='package',
                                 action='new_resource',
-                                id=pkg_dict['name'])
+                                id=pkg_dict['name'], protocol='https')
                 redirect(url)
 
             self._form_save_redirect(pkg_dict['name'], 'new', package_type=package_type)
