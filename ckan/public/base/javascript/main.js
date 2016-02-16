@@ -36,7 +36,14 @@ this.ckan = this.ckan || {};
       ckan.module.initialize();
     });
     if (jQuery.fn.popover !== undefined) {
-      jQuery('[data-target="popover"]').popover();
+      var popover_owner = jQuery('[data-target="popover"]');
+      popover_owner.popover().on('keyup', function(e) {
+          if (event.which === 27) {
+            popover_owner.popover('hide').trigger('blur');
+          }
+        });
+
+       
     }
   };
 
