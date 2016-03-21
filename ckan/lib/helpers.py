@@ -250,7 +250,8 @@ def _add_i18n_to_url(url_to_amend, **kw):
             url = '%s/%s%s' % (root, locale, url)
 
     # stop the root being added twice in redirects
-    if no_root:
+    # MG 2015-06-25: patched from https://github.com/ckan/ckan/issues/2260#issuecomment-72847083
+    if no_root and not url_to_amend[:4].lower() == 'http':
         url = url_to_amend[len(root):]
         if not default_locale:
             url = '/%s%s' % (locale, url)
