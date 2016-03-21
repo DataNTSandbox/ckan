@@ -56,22 +56,22 @@ class TestHelpers(object):
 
     def test_render_markdown_not_allow_html(self):
         data = '<h1>moo</h1>'
-        output = '<p>moo\n</p>'
+        output = '<p>moo</p>'
         eq_(h.render_markdown(data), output)
 
     def test_render_markdown_auto_link_without_path(self):
         data = 'http://example.com'
-        output = '<p><a href="http://example.com" target="_blank" rel="nofollow">http://example.com</a>\n</p>'
+        output = '<p><a href="http://example.com" target="_blank" rel="nofollow">http://example.com</a></p>'
         eq_(h.render_markdown(data), output)
 
     def test_render_markdown_auto_link(self):
         data = 'https://example.com/page.html'
-        output = '<p><a href="https://example.com/page.html" target="_blank" rel="nofollow">https://example.com/page.html</a>\n</p>'
+        output = '<p><a href="https://example.com/page.html" target="_blank" rel="nofollow">https://example.com/page.html</a></p>'
         eq_(h.render_markdown(data), output)
 
     def test_render_markdown_auto_link_ignoring_trailing_punctuation(self):
         data = 'My link: http://example.com/page.html.'
-        output = '<p>My link: <a href="http://example.com/page.html" target="_blank" rel="nofollow">http://example.com/page.html</a>.\n</p>'
+        output = '<p>My link: <a href="http://example.com/page.html" target="_blank" rel="nofollow">http://example.com/page.html</a>.</p>'
         eq_(h.render_markdown(data), output)
 
 
@@ -102,3 +102,14 @@ class TestLicenseOptions(object):
         eq_(dict(licenses)['some-old-license'], 'some-old-license')
         # and it is first on the list
         eq_(licenses[0][0], 'some-old-license')
+
+
+class TestResourceFormat(object):
+
+    def test_autodetect_tsv(self):
+
+        eq_(h.unified_resource_format('tsv'), 'TSV')
+
+        eq_(h.unified_resource_format('text/tab-separated-values'), 'TSV')
+
+        eq_(h.unified_resource_format('text/tsv'), 'TSV')
