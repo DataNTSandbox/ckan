@@ -3223,6 +3223,8 @@ my.SlickGrid = Backbone.View.extend({
 
     function sanitizeFieldName(name) {
       var sanitized;
+      if (typeof name === 'string')
+        return name.replace(/<|>/g, '');
       try{
         sanitized = $(name).text();
       } catch(e) {
