@@ -437,7 +437,10 @@ def auth_is_anon_user(context):
     # ignore that case for now. Stop putting the IP address
     # in context['user'] in a future ckan version.
     if context_user and '.' in context_user:
-        context_user = None
+        # Also check that it's not an email address as used in some
+        # usernames by ckanext-saml2 OEHXCDCD-358
+        if '@' not in context_user:
+            context_user = None
     is_anon_user = not bool(context_user)
 
     return is_anon_user
