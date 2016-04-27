@@ -122,6 +122,9 @@ def resource_update(context, data_dict):
     user = context['user']
     id = _get_or_bust(data_dict, "id")
 
+    if 'name' not in data_dict or data_dict['name'] == "":
+       raise ValidationError(["Please enter a name for the resource"])
+
     resource = model.Resource.get(id)
     context["resource"] = resource
 
@@ -155,7 +158,10 @@ def resource_update(context, data_dict):
         updated_pkg_dict = _get_action('package_update')(context, pkg_dict)
         context.pop('defer_commit')
     except ValidationError, e:
-        errors = e.error_dict['resources'][n]
+        if 'resources' in e.error_dict:
+            errors = e.error_dict['resources'][-1]
+        else:
+            errors = ["Please ensure the metadata details of the dataset are completed and saved before trying to add files/resources " + json.dumps(e.error_dict)]
         raise ValidationError(errors)
 
     upload.upload(id, uploader.get_max_resource_size())

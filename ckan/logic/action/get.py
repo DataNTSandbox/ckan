@@ -1692,7 +1692,7 @@ def package_search(context, data_dict):
         # If this query hasn't come from a controller that has set this flag
         # then we should remove any mention of capacity from the fq and
         # instead set it to only retrieve public datasets
-        fq = data_dict.get('fq', '')
+        fq = data_dict.get('fq', '-harvest_portal:*')
         if not context.get('ignore_capacity_check', False):
             fq = ' '.join(p for p in fq.split(' ')
                           if not 'capacity:' in p)

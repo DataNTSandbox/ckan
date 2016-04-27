@@ -274,6 +274,9 @@ def member_create(context, data_dict):
     authorized = new_authz.has_user_permission_for_group_or_org(group.id,
                                                                 user,
                                                                 permission)
+    if not group.is_organization and data_dict.get('object_type') == 'package':
+        authorized = True
+
     if not authorized:
         return {'success': False,
                 'msg': _('User %s not authorized to edit group %s') %

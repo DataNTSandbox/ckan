@@ -282,6 +282,9 @@ def resource_create(context, data_dict):
     model = context['model']
     user = context['user']
 
+    if 'name' not in data_dict or data_dict['name'] == "":
+       raise ValidationError(["Please enter a name for the resource"])
+
     package_id = _get_or_bust(data_dict, 'package_id')
     _get_or_bust(data_dict, 'url')
 
@@ -305,7 +308,11 @@ def resource_create(context, data_dict):
         _get_action('package_update')(context, pkg_dict)
         context.pop('defer_commit')
     except ValidationError, e:
-        errors = e.error_dict['resources'][-1]
+        if 'resources' in e.error_dict:
+            errors = e.error_dict['resources'][-1]
+        else:
+            errors = ["Please ensure the metadata details of the dataset are completed and saved before trying to add files/resources " + str(e.error_dict)]
+
         raise ValidationError(errors)
 
     ## Get out resource_id resource from model as it will not appear in

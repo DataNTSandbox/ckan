@@ -370,9 +370,9 @@ class FeedController(base.BaseController):
         for pkg in results:
             feed.add_item(
                 title=pkg.get('title', ''),
-                link=self.base_url + h.url_for(controller='package',
+                link=(self.base_url + h.url_for(controller='package',
                                                action='read',
-                                               id=pkg['id']),
+                                               id=pkg['id'])).replace('.au/data//','.au/'),
                 description=pkg.get('notes', ''),
                 updated=h.date_str_to_datetime(pkg.get('metadata_modified')),
                 published=h.date_str_to_datetime(pkg.get('metadata_created')),
@@ -381,11 +381,11 @@ class FeedController(base.BaseController):
                 author_email=pkg.get('author_email', ''),
                 categories=[t['name'] for t in pkg.get('tags', [])],
                 enclosure=webhelpers.feedgenerator.Enclosure(
-                    self.base_url + h.url_for(controller='api',
+                    (self.base_url + h.url_for(controller='api',
                                               register='package',
                                               action='show',
                                               id=pkg['name'],
-                                              ver='2'),
+                                              ver='2')).replace('.au/data//','.au/'),
                     unicode(len(json.dumps(pkg))),   # TODO fix this
                     u'application/json')
             )
@@ -400,7 +400,7 @@ class FeedController(base.BaseController):
         parameters.
         """
         path = h.url_for(controller=controller, action=action, **kwargs)
-        return h._url_with_params(self.base_url + path, query.items())
+        return h._url_with_params((self.base_url + path).replace('.au/data//','.au/'), query.items())
 
     def _navigation_urls(self, query, controller, action,
                          item_count, limit, **kwargs):

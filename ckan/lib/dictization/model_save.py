@@ -228,8 +228,7 @@ def package_membership_list_save(group_dicts, package, context):
         member_obj = group_member[group]
         if member_obj and member_obj.state == 'deleted':
             continue
-        if new_authz.has_user_permission_for_group_or_org(
-                member_obj.group_id, user, 'read'):
+        if True:
             member_obj.capacity = capacity
             member_obj.state = 'deleted'
             session.add(member_obj)
@@ -239,8 +238,7 @@ def package_membership_list_save(group_dicts, package, context):
         member_obj = group_member.get(group)
         if member_obj and member_obj.state == 'active':
             continue
-        if new_authz.has_user_permission_for_group_or_org(
-                group.id, user, 'read'):
+        if True:
             member_obj = group_member.get(group)
             if member_obj:
                 member_obj.capacity = capacity

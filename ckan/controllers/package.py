@@ -168,7 +168,7 @@ class PackageController(base.BaseController):
 
         c.remove_field = remove_field
 
-        sort_by = request.params.get('sort', None)
+        sort_by = request.params.get('sort', 'extras_harvest_portal asc, score desc, metadata_modified desc')
         params_nosort = [(k, v) for k, v in params_nopage if k != 'sort']
 
         def _sort_by(fields):
@@ -190,7 +190,7 @@ class PackageController(base.BaseController):
 
         c.sort_by = _sort_by
         if not sort_by:
-            c.sort_by_fields = []
+            c.sort_by_fields = [('extra_harvest_portal', 'asc'), ('score','desc'), ('metadata_modified','desc')]
         else:
             c.sort_by_fields = [field.split()[0]
                                 for field in sort_by.split(',')]
@@ -209,6 +209,8 @@ class PackageController(base.BaseController):
             c.fields_grouped = {}
             search_extras = {}
             fq = ''
+            if q == '':
+                fq ='-harvest_portal:*'
             for (param, value) in request.params.items():
                 if param not in ['q', 'page', 'sort'] \
                         and len(value) and not param.startswith('_'):
@@ -400,6 +402,9 @@ class PackageController(base.BaseController):
 
         # used by disqus plugin
         c.current_package_id = c.pkg.id
+        if h.get_pkg_dict_extra(c.pkg_dict,'harvest_portal'):
+            log.info(h.get_pkg_dict_extra(c.pkg_dict,'harvest_portal'))
+            redirect(h.get_pkg_dict_extra(c.pkg_dict,'harvest_url').encode('ascii','ignore'), 301)
         c.related_count = c.pkg.related_count
 
         # can the resources be previewed?
