@@ -241,9 +241,10 @@ def _add_i18n_to_url(url_to_amend, **kw):
         except TypeError:
             default_locale = True
     try:
-        root = request.environ.get('SCRIPT_NAME', '')
+        script_name = request.environ.get('SCRIPT_NAME', '')
     except TypeError:
-        root = ''
+        script_name = ''
+    root = ''
     if kw.get('qualified', False):
         # if qualified is given we want the full url ie http://...
         protocol, host = get_site_protocol_and_host()
@@ -252,7 +253,7 @@ def _add_i18n_to_url(url_to_amend, **kw):
                                        host=host,
                                        protocol=protocol)[:-1]
     # ckan.root_path is defined when we have none standard language
-    # position in the url
+    # position in the url or if site is running in a subfolder
     root_path = config.get('ckan.root_path', None)
     if root_path:
         # FIXME this can be written better once the merge
@@ -266,7 +267,8 @@ def _add_i18n_to_url(url_to_amend, **kw):
         if root_path[-1] == '/':
             root_path = root_path[:-1]
 
-        url_path = url_to_amend[len(root):]
+        # remove domain and prefix inserted by routes
+        url_path = url_to_amend[len(root + script_name):]
         url = '%s%s%s' % (root, root_path, url_path)
     else:
         if default_locale:
@@ -274,7 +276,7 @@ def _add_i18n_to_url(url_to_amend, **kw):
         else:
             # we need to strip the root from the url and the add it before
             # the language specification.
-            url = url_to_amend[len(root):]
+            url = url_to_amend[len(root + script_name):]
             url = '%s/%s%s' % (root, locale, url)
 
     # stop the root being added twice in redirects
