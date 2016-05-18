@@ -223,6 +223,9 @@ def _add_i18n_to_url(url_to_amend, **kw):
     # using that locale .If return_to is provided this is used as the url
     # (as part of the language changing feature).
     # A locale of default will not add locale info to the url.
+    #
+    # For qualified URLs, it strips off the domain used by routes and
+    # inserts ckan.site_url instead.
 
     default_locale = False
     locale = kw.pop('locale', None)
@@ -246,11 +249,11 @@ def _add_i18n_to_url(url_to_amend, **kw):
     site_url = ''
     if kw.get('qualified', False):
         # if qualified is given we want the full url ie http://...
-        protocol, host = get_site_protocol_and_host()
+        parsed_url = urlparse.urlparse(url_to_amend)
         root = _routes_default_url_for('/',
                                        qualified=True,
-                                       host=host,
-                                       protocol=protocol)[:-1]
+                                       host=parsed_url.netloc.encode('utf-8'),
+                                       protocol=parsed_url.scheme.encode('utf-8'))[:-1]
         site_url = config.get('ckan.site_url', '')
     # ckan.root_path is defined when we have non-standard language
     # position in the url or if site is running in a subfolder
