@@ -255,7 +255,8 @@ def _add_i18n_to_url(url_to_amend, **kw):
                                        qualified=True,
                                        host=parsed_url.netloc.encode('utf-8'),
                                        protocol=parsed_url.scheme.encode('utf-8'))[:-1]
-        site_url = config.get('ckan.site_url', '')
+        site_url = "%s://%s" % (parsed_url.scheme.encode('utf-8'),
+                                parsed_url.netloc.encode('utf-8'))
     # ckan.root_path is defined when we have non-standard language
     # position in the url or if site is running in a subfolder
     root_path = config.get('ckan.root_path', None)
