@@ -246,13 +246,19 @@ def _add_i18n_to_url(url_to_amend, **kw):
         root = ''
     site_url = ''
     if kw.get('qualified', False):
-        # if qualified is given we want the full url ie http://...
-        protocol, host = get_site_protocol_and_host()
+        # Determine the qualified URL stem used by Routes, which
+        # includes, the scheme, hostname and WSGIScriptAlias, e.g.,
+        # http://example.com/ckan
+        parsed_url = urlparse.urlparse(url_to_amend)
         root = _routes_default_url_for('/',
                                        qualified=True,
-                                       host=host,
-                                       protocol=protocol)[:-1]
-        site_url = config.get('ckan.site_url', '')
+                                       host=parsed_url.netloc.encode('utf-8'),
+                                       protocol=parsed_url.scheme.encode('utf-8'))[:-1]
+        # Use the same scheme and host as Routes, which matches what
+        # the client is using, to avoid cross-origin errors where a
+        # CNAME != ckan.site_url is used, e.g., www.example.com
+        site_url = "%s://%s" % (parsed_url.scheme.encode('utf-8'),
+                                parsed_url.netloc.encode('utf-8'))
     # ckan.root_path is defined when we have non-standard language
     # position in the url or if site is running in a subfolder
     root_path = config.get('ckan.root_path', None)
