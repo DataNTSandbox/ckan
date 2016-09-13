@@ -2,6 +2,7 @@ from pylons import config
 
 import urllib
 import urllib2
+import json
 
 def check_recaptcha(request):
     '''Check a user\'s recaptcha submission is valid, and raise CaptchaError
