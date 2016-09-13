@@ -58,7 +58,8 @@
     {% if c.pkg_dict.get('license_url', None) %}
     <dct:rights rdf:resource="{{c.pkg_dict['license_url']}}"/>
     {% endif %}
-    {% for extra_dict in c.pkg_dict.get('extras', []) %}
+
+    {% for extra_dict in c.pkg_dict.get('extras',None) %}
         <dct:relation>
           <rdf:Description>
             <rdfs:label>{{extra_dict.get('key','')}}</rdfs:label>
