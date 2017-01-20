@@ -1093,7 +1093,7 @@ msgid ""
 "To accept this invite, please reset your password at:\n"
 "\n"
 "   {reset_link}\n"
-msgstr "You have been invited to {site_title}. A user has already been created to you with the username {user_name}. You can change it later.\n\nTo accept this invite, please reset your password at:\n\n   {reset_link}\n"
+msgstr "You have been invited to {site_title}. A user has already been created for you with the username {user_name}. You can change it later.\n\nTo accept this invite, please reset your password at:\n\n   {reset_link}\n"
 
 #: ckan/lib/mailer.py:145 ckan/templates/user/request_reset.html:3
 #: ckan/templates/user/request_reset.html:13
